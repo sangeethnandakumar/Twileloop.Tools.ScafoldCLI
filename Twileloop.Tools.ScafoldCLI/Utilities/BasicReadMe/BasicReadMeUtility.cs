@@ -10,40 +10,37 @@ namespace Twileloop.Tools.ScafoldCLI.Utilities.BasicReadMe
         public override string Description { get; set; } = "Adds a standard ReadMe file to current directory";
         public override string[] Authors { get; set; } = new string[] { "Sangeeth Nandakumar", "Twileloop" };
 
-        public override bool OnExecute(BasicInfo basicInfo)
+        public override bool OnExecute(ProjectInfo info)
         {
-            ReportLog("Executing...");
+            Log("Scafolding README.md...");
             var template = File.ReadAllText("Utilities\\BasicReadMe\\README.md");
-            template = template.Replace("{NAME}", basicInfo.Name);
-            template = template.Replace("{PACKAGEID}", basicInfo.PackageId);
-            template = template.Replace("{DESCRIPTION}", basicInfo.Description);
-            template = template.Replace("{GITORGANDREPO}", basicInfo.GitOrgAndRepo);
-            template = template.Replace("{PACKAGEICONURL}", basicInfo.PackageIconURL);
-            template = template.Replace("{READTHEDOCSSUBDOMAIN}", basicInfo.GitOrgAndRepo.Split("/")[1].ToLower());
-            template = template.Replace("{CONTACTMAIL}", basicInfo.ContactMail);
-            template = template.Replace("{BUYMEACOFFEEUSERNAME}", basicInfo.BuyMeACoffeeUsername);
-            template = template.Replace("{SONARQUBEPROJECTID}", basicInfo.GitOrgAndRepo.Replace("/", "_"));
-            File.WriteAllText($"{basicInfo.RootDirectory}\\README.md", template);
+            template = template.Replace("{NAME}", info.Package.Name);
+            template = template.Replace("{PACKAGEID}", info.Package.PackageId);
+            template = template.Replace("{DESCRIPTION}", info.Package.Description);
+            template = template.Replace("{GITORGANDREPO}", info.Directives.GitOrgAndRepo);
+            template = template.Replace("{PACKAGEICONURL}", info.Package.PackageIconURL);
+            template = template.Replace("{READTHEDOCSSUBDOMAIN}", info.Directives.GitOrgAndRepo.Split("/")[1].ToLower());
+            template = template.Replace("{CONTACTMAIL}", info.Support.ContactMail);
+            template = template.Replace("{BUYMEACOFFEEUSERNAME}", info.Support.BuyMeACoffeeUsername);
+            template = template.Replace("{SONARQUBEPROJECTID}", info.Directives.GitOrgAndRepo.Replace("/", "_"));
+            Log("Copying file...");
+            File.WriteAllText($"{info.Directives.RootDirectory}\\README.md", template);
             return true;
         }
 
-        public override bool OnFinish(BasicInfo basicInfo)
+        public override bool OnFinish(ProjectInfo info)
         {
+            Log("Done");
             return true;
         }
 
-        public override bool OnStart(BasicInfo basicInfo)
+        public override bool OnStart(ProjectInfo info)
         {
-            ReportLog("Checking if an existing README.md file exists...");
-            string fileName = $"{basicInfo.RootDirectory}\\README.md";
-
+            Log("Checking if an existing README.md file exists...");
+            string fileName = $"{info.Directives.RootDirectory}\\README.md";
             if (File.Exists(fileName))
             {
-                ReportLog("A file called 'README.md' already exists. Do you want to override (y/n)?");
-                if (File.Exists(fileName))
-                {
-                    ReportLog("A file called 'README.md' already exists. Do you want to override?");
-                }
+                return AskYesOrNo("A file called 'README.md' already exists. Do you want to override");
             }
             return true;
         }

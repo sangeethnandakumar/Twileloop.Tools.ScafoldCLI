@@ -2,30 +2,15 @@
 using System.Reflection;
 using System.Text.RegularExpressions;
 using Twileloop.Tools.ScafoldCLI.Core;
+using Twileloop.Tools.ScafoldCLI.Helpers;
 
 AnsiConsole.Write(
     new FigletText("Scafold CLI")
         .LeftAligned()
         .Color(Color.Red));
 
-//Get basic user input
-//var packageId = AnsiConsole.Ask<string>("Enter your [green]Unique Package ID[/]:");
-//var name = AnsiConsole.Ask<string>("Enter your [green]Application Name[/]:");
-//var description = AnsiConsole.Ask<string>("Enter your [green]Package Description[/]: ");
-//var authors = AnsiConsole.Ask<string>("Enter [green]Author(s)[/] [grey](Seperated by comma)[/]: ");
+var projectInfo = Helpers.DeserializeFromXml(File.ReadAllText("projectinfo.xml"), typeof(ProjectInfo)) as ProjectInfo;
 
-var basicInfo = new BasicInfo
-{
-    PackageId = "Twileloop.JetTask",
-    Name = "Twileloop JetTask",
-    Description = "Twileloop.JetTask allows building automated pipeline system into your .NET application with yaml support.",
-    Authors = new string[] { "Sangeeth Nandakumar", "Twileloop" },
-    RootDirectory = "D:\\Twileloop\\PerfoBoost",
-    GitOrgAndRepo = "sangeethnandakumar/JetTask",
-    PackageIconURL = "https://cdn-icons-png.flaticon.com/512/7202/7202291.png",
-    ContactMail = "twileloop@outlook.com",
-    BuyMeACoffeeUsername = "sangeethnanda"
-};
 
 Console.WriteLine();
 
@@ -56,14 +41,39 @@ foreach (Type type in assembly.GetTypes())
         var abstractInstance = (AbstractUtility)Activator.CreateInstance(type);
         if (abstractInstance.UniqueID == choice)
         {
-            AnsiConsole.MarkupLine($"Executing: [blue]'{abstractInstance.DisplayName.ToUpper()}'[/]");
+            var panel = new Panel($"[underline bold blue]{abstractInstance.DisplayName}[/]");
+            AnsiConsole.Write(panel);
+            AnsiConsole.MarkupLine($"[white]{abstractInstance.Description}[/]");
+            AnsiConsole.MarkupLine($"Authors: [blue]{string.Join(", ", abstractInstance.Authors)}[/]");
 
-            abstractInstance.OnStart(basicInfo);
-            abstractInstance.OnExecute(basicInfo);
-            abstractInstance.OnFinish(basicInfo);
-
-            Console.WriteLine();
-            AnsiConsole.MarkupLine($"Completed Execution");
+            var stageResult = true;
+            stageResult = abstractInstance.OnStart(projectInfo);
+            if (stageResult)
+            {
+                stageResult = abstractInstance.OnExecute(projectInfo);
+                if (stageResult)
+                {
+                    stageResult = abstractInstance.OnFinish(projectInfo);
+                    if (stageResult)
+                    {
+                        Console.WriteLine();
+                        Console.WriteLine();
+                        AnsiConsole.MarkupLine($"Completed Execution");
+                    }
+                    else
+                    {
+                        AnsiConsole.MarkupLine($"   → [red]Stage Unsuccessfull[/]");
+                    }
+                }
+                else
+                {
+                    AnsiConsole.MarkupLine($"   → [red]Stage Unsuccessfull[/]");
+                }
+            }
+            else
+            {
+                AnsiConsole.MarkupLine($"   → [red]Stage Unsuccessfull[/]");
+            }
 
             break;
         }

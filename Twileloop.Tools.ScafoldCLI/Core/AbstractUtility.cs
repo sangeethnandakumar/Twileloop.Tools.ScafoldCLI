@@ -9,23 +9,41 @@ namespace Twileloop.Tools.ScafoldCLI.Core
         public abstract string Description { get; set; }
         public abstract string[] Authors { get; set; }
 
-        public void ReportLog(string logText)
+        public void Log(string logText)
         {
-            AnsiConsole.MarkupLine($"   → [grey]{logText}[/]");
+            AnsiConsole.Markup($"\n   → [grey]{logText}[/]");
         }
 
-        public virtual bool OnStart(BasicInfo basicInfo)
+        public bool AskYesOrNo(string question)
+        {
+            Log($"{question} [lime][[y/n]][/]: ");
+            var choice = Console.ReadLine();
+            if (choice.ToLower() != "y")
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public string AskQuery(string question)
+        {
+            AnsiConsole.Markup($"\n   → [lime]Q[/].[white] {question}[/]: ");
+            return Console.ReadLine();
+        }
+
+        public virtual bool OnStart(ProjectInfo basicInfo)
         {
             return true;
         }
 
-        public virtual bool OnExecute(BasicInfo basicInfo)
+        public virtual bool OnExecute(ProjectInfo basicInfo)
         {
             return true;
         }
 
-        public virtual bool OnFinish(BasicInfo basicInfo)
+        public virtual bool OnFinish(ProjectInfo basicInfo)
         {
+            Log($"Done");
             return true;
         }
     }
