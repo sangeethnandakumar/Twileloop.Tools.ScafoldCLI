@@ -14,7 +14,7 @@ AnsiConsole.Write(
 //var description = AnsiConsole.Ask<string>("Enter your [green]Package Description[/]: ");
 //var authors = AnsiConsole.Ask<string>("Enter [green]Author(s)[/] [grey](Seperated by comma)[/]: ");
 
-var basicInfo = new BasicInfo
+var basicInfo = new ProjectInfo
 {
     PackageId = "Twileloop.JetTask",
     Name = "Twileloop JetTask",
@@ -56,14 +56,39 @@ foreach (Type type in assembly.GetTypes())
         var abstractInstance = (AbstractUtility)Activator.CreateInstance(type);
         if (abstractInstance.UniqueID == choice)
         {
-            AnsiConsole.MarkupLine($"Executing: [blue]'{abstractInstance.DisplayName.ToUpper()}'[/]");
+            var panel = new Panel($"[underline bold blue]{abstractInstance.DisplayName}[/]");
+            AnsiConsole.Write(panel);
+            AnsiConsole.MarkupLine($"[white]{abstractInstance.Description}[/]");
+            AnsiConsole.MarkupLine($"Authors: [blue]{string.Join(", ", abstractInstance.Authors)}[/]");
 
-            abstractInstance.OnStart(basicInfo);
-            abstractInstance.OnExecute(basicInfo);
-            abstractInstance.OnFinish(basicInfo);
-
-            Console.WriteLine();
-            AnsiConsole.MarkupLine($"Completed Execution");
+            var stageResult = true;
+            stageResult = abstractInstance.OnStart(basicInfo);
+            if (stageResult)
+            {
+                stageResult = abstractInstance.OnExecute(basicInfo);
+                if (stageResult)
+                {
+                    stageResult = abstractInstance.OnFinish(basicInfo);
+                    if(stageResult)
+                    {
+                        Console.WriteLine();
+                        Console.WriteLine();
+                        AnsiConsole.MarkupLine($"Completed Execution");
+                    }
+                    else
+                    {
+                        AnsiConsole.MarkupLine($"   → [red]Stage Unsuccessfull[/]");
+                    }
+                }
+                else
+                {
+                    AnsiConsole.MarkupLine($"   → [red]Stage Unsuccessfull[/]");
+                }
+            }
+            else
+            {
+                AnsiConsole.MarkupLine($"   → [red]Stage Unsuccessfull[/]");
+            }
 
             break;
         }

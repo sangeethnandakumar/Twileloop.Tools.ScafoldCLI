@@ -1,6 +1,6 @@
 ﻿namespace Twileloop.Tools.ScafoldCLI.Core
 {
-    public class BasicInfo
+    public class ProjectInfo
     {
         public string PackageId { get; set; }
         public string Name { get; set; }

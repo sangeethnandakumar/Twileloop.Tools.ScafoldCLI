@@ -9,21 +9,21 @@ namespace Twileloop.Tools.ScafoldCLI.Utilities
         public override string Description { get; set; } = "Adds basic meta details to csproj for packaging";
         public override string[] Authors { get; set; } = new string[] { "Sangeeth Nandakumar", "Twileloop" };
 
-        public override bool OnExecute(BasicInfo basicInfo)
+        public override bool OnExecute(ProjectInfo basicInfo)
         {
-            ReportLog("Executing...");
+            Log("Executing...");
             return true;
         }
 
-        public override bool OnFinish(BasicInfo basicInfo)
+        public override bool OnFinish(ProjectInfo basicInfo)
         {
-            ReportLog("Finishing off...");
+            Log("Finishing off...");
             return true;
         }
 
-        public override bool OnStart(BasicInfo basicInfo)
+        public override bool OnStart(ProjectInfo basicInfo)
         {
-            ReportLog("Starting...");
+            Log("Starting...");
             return true;
         }
     }
