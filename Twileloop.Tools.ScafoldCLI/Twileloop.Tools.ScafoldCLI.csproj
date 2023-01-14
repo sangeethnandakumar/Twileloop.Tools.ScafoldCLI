@@ -8,7 +8,6 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Spectre.Console" Version="0.45.0" />
-    <PackageReference Include="YamlDotNet" Version="12.3.1" />
   </ItemGroup>
   <ItemGroup>
     <None Update="projectinfo.xml">
@@ -23,9 +22,42 @@
     <None Update="Utilities\PackageMeta\logo.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Utilities\ReadTheDoc\Docs\conf.py">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Utilities\ReadTheDoc\Docs\index.rst">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Utilities\ReadTheDoc\Docs\make.bat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Utilities\ReadTheDoc\Docs\Makefile">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Utilities\ReadTheDoc\Docs\Sections\sectionA.rst">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Utilities\ReadTheDoc\Docs\Sections\sectionB.rst">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Utilities\ReadTheDoc\Docs\Sections\sectionC.rst">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Utilities\ReadTheDoc\Docs\_static\custom.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Utilities\ReadTheDoc\Docs\_static\custom.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Utilities\ReadTheDoc\Docs\_static\logo.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Utilities\SonarScan\sonarscan.yml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Utilities\ReadTheDoc\Docs\_templates\" />
   </ItemGroup>
 
 </Project>
